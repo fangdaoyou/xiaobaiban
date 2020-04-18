@@ -28,26 +28,42 @@
       #{role,jdbcType=TINYINT}, #{avatar,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{teamId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR})
   </insert>
+
   <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.User">
     update baiban_user
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      reg_time = #{regTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      role = #{role,jdbcType=TINYINT},
-      avatar = #{avatar,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      team_id = #{teamId,jdbcType=INTEGER},
-      phone = #{phone,jdbcType=VARCHAR}
-    where uid = #{uid,jdbcType=INTEGER}
+    set
+    <if test="user.password!=null">
+      password = #{user.password,jdbcType=VARCHAR},
+    </if>
+    <if test="user.nickname!=null">
+      nickname = #{user.nickname,jdbcType=VARCHAR},
+    </if>
+    <if test="user.role!=null">
+      role = #{user.role,jdbcType=TINYINT},
+    </if>
+    <if test="user.avatar!=null">
+      avatar = #{user.avatar,jdbcType=VARCHAR},
+    </if>
+    <if test="user.email!=null">
+      email = #{user.email,jdbcType=VARCHAR},
+    </if>
+    <if test="user.teamId!=null">
+      team_id = #{user.teamId,jdbcType=INTEGER},
+    </if>
+    <if test="user.phone!=null">
+      phone = #{user.phone,jdbcType=VARCHAR}
+    </if>
+
+    where uid = #{user.uid,jdbcType=INTEGER}
   </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select uid, username, password, nickname, reg_time, update_time, role, avatar, email, 
     team_id, phone
     from baiban_user
     where uid = #{uid,jdbcType=INTEGER}
   </select>
+
   <select id="selectAll" resultMap="BaseResultMap">
     select uid, user    name, password, nickname, reg_time, update_time, role, avatar, email,
     team_id, phone

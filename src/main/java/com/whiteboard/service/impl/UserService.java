@@ -105,11 +105,6 @@ public class UserService implements IUserService {
         }
         count = userMapper.findByEmail(email);
         if (count > 0){
-            return ServerResponse.createServerResponseByFail(ResponseCode.USERNAME_EXISTS.getCode(),
-                    ResponseCode.USERNAME_EXISTS.getMsg());
-        }
-        count = userMapper.findByEmail(email);
-        if (count > 0){
             return ServerResponse.createServerResponseByFail(ResponseCode.EMAIL_EXISTS.getCode(),
                     ResponseCode.EMAIL_EXISTS.getMsg());
         }
@@ -129,5 +124,17 @@ public class UserService implements IUserService {
                     ResponseCode.REGISTER_ERROR.getMsg());
         }
         return ServerResponse.createServerResponseBySucess();
+    }
+
+    @Override
+    public ServerResponse updateLogic(User user) {
+        int count = userMapper.updateByPrimaryKey(user);
+        if (count == 0){
+            return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
+                    ResponseCode.UPDATE_ERROR.getMsg());
+        }
+        User newUser = userMapper.selectByPrimaryKey(user.getUid());
+        UserVO userVO = convert(newUser);
+        return ServerResponse.createServerResponseBySucess(userVO);
     }
 }

@@ -14,7 +14,7 @@ public interface UserMapper {
 
     List<User> selectAll();
 
-    int updateByPrimaryKey(User record);
+    int updateByPrimaryKey(@Param("user") User record);
 
     Integer findByUsername(@Param("username") String username);
 

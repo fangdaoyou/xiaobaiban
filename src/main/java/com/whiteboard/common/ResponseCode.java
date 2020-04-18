@@ -12,7 +12,9 @@ public enum  ResponseCode {
     USERNAME_EXISTS(9,"用户名已存在"),
     EMAIL_EXISTS(10,"邮箱已存在"),
     PHONE_EXISTS(11,"电话已存在"),
-    REGISTER_ERROR(12,"注册失败")
+    REGISTER_ERROR(12,"注册失败"),
+    NEED_LOGIN(13,"未登录"),
+    UPDATE_ERROR(14,"更新失败")
     ;
     private int code;
     private String msg;

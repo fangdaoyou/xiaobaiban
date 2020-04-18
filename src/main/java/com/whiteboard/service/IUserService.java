@@ -18,4 +18,9 @@ public interface IUserService {
      * @return
      */
     public ServerResponse registerLogic(User user);
+
+    /**
+     * 修改用户信息
+     */
+    public ServerResponse updateLogic(User user);
 }
