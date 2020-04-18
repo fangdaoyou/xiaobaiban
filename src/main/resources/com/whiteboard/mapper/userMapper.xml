@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whiteboard.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.whiteboard.pojo.User">
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="role" jdbcType="TINYINT" property="role" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from baiban_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.whiteboard.pojo.User">
+    insert into baiban_user (uid, username, password, 
+      nickname, reg_time, update_time, 
+      role, avatar, email, 
+      team_id, phone)
+    values (#{uid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, now(), now(),
+      #{role,jdbcType=TINYINT}, #{avatar,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{teamId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.User">
+    update baiban_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      role = #{role,jdbcType=TINYINT},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      team_id = #{teamId,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select uid, username, password, nickname, reg_time, update_time, role, avatar, email, 
+    team_id, phone
+    from baiban_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select uid, user    name, password, nickname, reg_time, update_time, role, avatar, email,
+    team_id, phone
+    from baiban_user
+  </select>
+
+  <select id="findByUsername" parameterType="String" resultType="int">
+    select count(*)
+    from baiban_user
+    where username=#{username}
+  </select>
+
+  <select id="findByEmail" parameterType="String" resultType="int">
+    select count(*)
+    from baiban_user
+    where email=#{email}
+  </select>
+
+  <select id="findByPhone" parameterType="String" resultType="int">
+    select count(*)
+    from baiban_user
+    where phone=#{phone}
+  </select>
+
+  <select id="findByUsernameAndPassword" parameterType="map" resultMap="BaseResultMap">
+    select uid, username, nickname, reg_time, update_time, role, avatar, email,
+    team_id, phone
+    from baiban_user
+    where username=#{username} and password=#{password}
+  </select>
+
+
+</mapper>
