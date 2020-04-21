@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whiteboard.dao.TeamMapper">
+  <resultMap id="BaseResultMap" type="com.whiteboard.pojo.Team">
+    <id column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="team_name" jdbcType="VARCHAR" property="teamName" />
+    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from baiban_team
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.whiteboard.pojo.Team" useGeneratedKeys="true" keyProperty="teamId">
+    insert into baiban_team (team_id, team_name, reg_time, 
+      update_time, member_count, avatar
+      )
+    values (#{teamId,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR}, now(),
+      now(), #{memberCount,jdbcType=INTEGER}, #{avatar,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.Team">
+    update baiban_team
+    set team_name = #{teamName,jdbcType=VARCHAR},
+      update_time = now(),
+      member_count = #{memberCount,jdbcType=INTEGER},
+      avatar = #{avatar,jdbcType=VARCHAR}
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select team_id, team_name, reg_time, update_time, member_count, avatar
+    from baiban_team
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select team_id, team_name, reg_time, update_time, member_count, avatar
+    from baiban_team
+  </select>
+
+  <select id="findByTeamName" parameterType="String" resultType="int">
+    select count(*)
+    from baiban_team
+    where team_name = #{team_name}
+  </select>
+</mapper>

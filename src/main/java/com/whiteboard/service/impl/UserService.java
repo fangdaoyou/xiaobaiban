@@ -117,6 +117,7 @@ public class UserService implements IUserService {
         //step3:注册
         user.setPassword(Md5Util.encode(user.getPassword()));
         user.setRole((byte) Const.ROLE_USER);
+        user.setTeamId(Const.DEFAULT_TEAM_ID);
         Integer result = userMapper.insert(user);
 
         if (result == 0){

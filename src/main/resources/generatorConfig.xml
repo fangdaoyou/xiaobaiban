@@ -60,6 +60,8 @@
                    是否生成 example类   -->
         <table tableName="baiban_user" domainObjectName="User" enableCountByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="baiban_team" domainObjectName="Team" enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"/>
 
     </context>
 </generatorConfiguration>

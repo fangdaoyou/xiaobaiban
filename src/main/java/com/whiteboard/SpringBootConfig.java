@@ -20,7 +20,11 @@ public class SpringBootConfig implements WebMvcConfigurer {
         List<String> excluedUrl = new ArrayList<>();
         excluedUrl.add("/portal/user/login");
         excluedUrl.add("/portal/user/register");
-        registry.addInterceptor(portalLogin).addPathPatterns("/portal/user/**")
+        List<String> interceptedUrl = new ArrayList<>();
+        interceptedUrl.add("/portal/user/**");
+        interceptedUrl.add("/portal/team/**");
+
+        registry.addInterceptor(portalLogin).addPathPatterns(interceptedUrl)
                 .excludePathPatterns(excluedUrl);
     }
 }

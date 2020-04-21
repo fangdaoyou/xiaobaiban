@@ -42,10 +42,10 @@ public class UserController {
 //            return ServerResponse.createServerResponseByFail(ResponseCode.NEED_LOGIN.getCode(),
 //                    ResponseCode.NEED_LOGIN.getMsg());
 //        }
-//        if (user == null){
-//            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
-//                    ResponseCode.PARAM_EMPTY.getMsg());
-//        }
+        if (user == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
         user.setUid(userInfo.getUid());
 
         ServerResponse serverResponse = userService.updateLogic(user);

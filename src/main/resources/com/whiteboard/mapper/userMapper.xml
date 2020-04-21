@@ -65,7 +65,7 @@
   </select>
 
   <select id="selectAll" resultMap="BaseResultMap">
-    select uid, user    name, password, nickname, reg_time, update_time, role, avatar, email,
+    select uid, username, password, nickname, reg_time, update_time, role, avatar, email,
     team_id, phone
     from baiban_user
   </select>
@@ -94,6 +94,4 @@
     from baiban_user
     where username=#{username} and password=#{password}
   </select>
-
-
 </mapper>

@@ -14,7 +14,10 @@ public enum  ResponseCode {
     PHONE_EXISTS(11,"电话已存在"),
     REGISTER_ERROR(12,"注册失败"),
     NEED_LOGIN(13,"未登录"),
-    UPDATE_ERROR(14,"更新失败")
+    UPDATE_ERROR(14,"更新失败"),
+    TEAM_NAME_EMPTY(15,"团队名不能为空"),
+    TEAM_NAME_EXISTS(16,"团队名已存在"),
+    TEAM_MEMBER_COUNT_EMPTY(17,"团队人数不能为空"),
     ;
     private int code;
     private String msg;

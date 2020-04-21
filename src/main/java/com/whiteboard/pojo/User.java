@@ -1,10 +1,7 @@
 package com.whiteboard.pojo;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.util.Date;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class User {
     private Integer uid;
 
@@ -24,9 +21,9 @@ public class User {
 
     private String email;
 
-    private Integer teamId;
-
     private String phone;
+
+    private Integer teamId;
 
     public Integer getUid() {
         return uid;
@@ -100,19 +97,19 @@ public class User {
         this.email = email == null ? null : email.trim();
     }
 
-    public Integer getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
-    }
-
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
+    }
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
     }
 }
