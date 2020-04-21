@@ -16,5 +16,7 @@ spring:
 mybatis:
   mapper-locations: classpath*:com/whiteboard/mapper/*Mapper.xml
   config-location: classpath:mybatis-config.xml
+whiteboard:
+  host: https://lyh.com/
 server:
   port: 8081

@@ -38,14 +38,14 @@ public class UserController {
 
         //step1:判断用户是否登录
         UserVO userInfo = (UserVO)session.getAttribute(Const.CURRENT_USER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByFail(ResponseCode.NEED_LOGIN.getCode(),
-                    ResponseCode.NEED_LOGIN.getMsg());
-        }
-        if (user == null){
-            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
-                    ResponseCode.PARAM_EMPTY.getMsg());
-        }
+//        if (userInfo == null){
+//            return ServerResponse.createServerResponseByFail(ResponseCode.NEED_LOGIN.getCode(),
+//                    ResponseCode.NEED_LOGIN.getMsg());
+//        }
+//        if (user == null){
+//            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+//                    ResponseCode.PARAM_EMPTY.getMsg());
+//        }
         user.setUid(userInfo.getUid());
 
         ServerResponse serverResponse = userService.updateLogic(user);

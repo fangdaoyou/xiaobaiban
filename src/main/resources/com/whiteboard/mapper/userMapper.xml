@@ -51,9 +51,9 @@
       team_id = #{user.teamId,jdbcType=INTEGER},
     </if>
     <if test="user.phone!=null">
-      phone = #{user.phone,jdbcType=VARCHAR}
+      phone = #{user.phone,jdbcType=VARCHAR},
     </if>
-
+      update_time = now()
     where uid = #{user.uid,jdbcType=INTEGER}
   </update>
 

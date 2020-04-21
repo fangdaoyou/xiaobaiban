@@ -1,5 +1,6 @@
 package com.whiteboard.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,9 @@ import java.util.UUID;
 
 @Controller
 public class UploadController {
+
+    @Value("${whiteboard.host}")
+    String imageHost;
 
     @GetMapping(value = "/upload")
     public String upload(){
@@ -33,7 +37,7 @@ public class UploadController {
                     "小白板" + File.separator + "upload", newName + extend);
             try {
                 file.transferTo(file1);
-                return file1.getAbsolutePath();
+                return imageHost + newName + extend;
             } catch (IOException e) {
                 e.printStackTrace();
             }
