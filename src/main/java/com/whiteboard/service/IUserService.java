@@ -2,6 +2,7 @@ package com.whiteboard.service;
 
 import com.whiteboard.pojo.User;
 import com.whiteboard.utils.ServerResponse;
+import org.apache.ibatis.annotations.Param;
 
 public interface IUserService {
     /**

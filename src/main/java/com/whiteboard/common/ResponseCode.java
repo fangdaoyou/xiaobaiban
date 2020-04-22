@@ -18,6 +18,10 @@ public enum  ResponseCode {
     TEAM_NAME_EMPTY(15,"团队名不能为空"),
     TEAM_NAME_EXISTS(16,"团队名已存在"),
     TEAM_MEMBER_COUNT_EMPTY(17,"团队人数不能为空"),
+    USER_IS_IN_TEAM(18,"用户已有团队"),
+    TEAM_NOT_EXISTS(19,"团队不存在"),
+    PARAM_ERROR(20,"非法参数"),
+    JOIN_TEAM_ERROR(21,"加入团队失败"),
     ;
     private int code;
     private String msg;

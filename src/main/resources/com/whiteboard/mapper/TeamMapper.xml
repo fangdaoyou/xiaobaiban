@@ -14,7 +14,7 @@
     where team_id = #{teamId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.whiteboard.pojo.Team" useGeneratedKeys="true" keyProperty="teamId">
-    insert into baiban_team (team_id, team_name, reg_time, 
+    insert into baiban_team (team_id, team_name, reg_time,
       update_time, member_count, avatar
       )
     values (#{teamId,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR}, now(),

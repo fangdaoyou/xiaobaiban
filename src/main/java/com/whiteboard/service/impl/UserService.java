@@ -51,7 +51,7 @@ public class UserService implements IUserService {
         return ServerResponse.createServerResponseBySucess(convert(user));
     }
 
-    private UserVO convert(User user){
+    public UserVO convert(User user){
         UserVO userVO = new UserVO();
         userVO.setUid(user.getUid());
         userVO.setAvatar(user.getAvatar());
@@ -134,8 +134,8 @@ public class UserService implements IUserService {
 
     @Override
     public ServerResponse updateLogic(User user) {
-        int count = userMapper.updateByPrimaryKey(user);
-        if (count == 0){
+        Integer result = userMapper.updateByPrimaryKey(user);
+        if (result == 0){
             return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
                     ResponseCode.UPDATE_ERROR.getMsg());
         }
