@@ -19,4 +19,4 @@ mybatis:
 whiteboard:
   host: https://lyh.com/
 server:
-  port: 8080
+  port: 4396

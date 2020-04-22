@@ -23,4 +23,11 @@ public interface IUserService {
      * 修改用户信息
      */
     public ServerResponse updateLogic(User user);
+
+    /**
+     * 查询用户
+     * @param keyword
+     * @return
+     */
+    public ServerResponse searchLogic(String keyword, Integer pageNum, Integer pageSize, String orderBy);
 }

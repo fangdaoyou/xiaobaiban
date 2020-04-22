@@ -6,6 +6,7 @@ import com.whiteboard.pojo.User;
 import com.whiteboard.service.IUserService;
 import com.whiteboard.utils.ServerResponse;
 import com.whiteboard.vo.UserVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,12 +37,7 @@ public class UserController {
     @RequestMapping(value = "user/update")
     public ServerResponse updateUser(User user, HttpSession session){
 
-        //step1:判断用户是否登录
         UserVO userInfo = (UserVO)session.getAttribute(Const.CURRENT_USER);
-//        if (userInfo == null){
-//            return ServerResponse.createServerResponseByFail(ResponseCode.NEED_LOGIN.getCode(),
-//                    ResponseCode.NEED_LOGIN.getMsg());
-//        }
         if (user == null){
             return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
                     ResponseCode.PARAM_EMPTY.getMsg());
@@ -52,6 +48,15 @@ public class UserController {
         if (serverResponse.isSucess()){//更新session用户信息
             session.setAttribute(Const.CURRENT_USER, serverResponse.getData());
         }
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "user/search")
+    public ServerResponse search(String keyword,
+                                 @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                 String orderBy){
+        ServerResponse serverResponse = userService.searchLogic(keyword, pageNum, pageSize, orderBy);
         return serverResponse;
     }
 

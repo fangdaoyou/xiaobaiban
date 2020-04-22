@@ -94,4 +94,17 @@
     from baiban_user
     where username=#{username} and password=#{password}
   </select>
+
+  <select id="findByKeywords" parameterType="map" resultMap="BaseResultMap">
+    select uid, username, nickname, reg_time, update_time, role, avatar, email,
+    team_id, phone
+    from baiban_user
+    where username like #{keyword} or
+          nickname like #{keyword} or
+          email like #{keyword} or
+          phone like #{keyword} or
+          team_id like #{keyword}
+  </select>
+
+
 </mapper>

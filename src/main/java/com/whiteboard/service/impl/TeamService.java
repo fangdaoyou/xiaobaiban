@@ -1,5 +1,7 @@
 package com.whiteboard.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.whiteboard.common.ResponseCode;
 import com.whiteboard.dao.TeamMapper;
 import com.whiteboard.pojo.Team;
@@ -9,8 +11,12 @@ import com.whiteboard.utils.DateUtil;
 import com.whiteboard.utils.ServerResponse;
 import com.whiteboard.vo.TeamVO;
 import com.whiteboard.vo.UserVO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TeamService implements ITeamService {
@@ -48,6 +54,24 @@ public class TeamService implements ITeamService {
         Team newTeam = teamMapper.selectByPrimaryKey(team.getTeamId());
         TeamVO teamVO = convert(newTeam);
         return ServerResponse.createServerResponseBySucess(teamVO);
+    }
+
+    @Override
+    public ServerResponse searchLogic(String keyword, Integer pageNum, Integer pageSize, String orderBy) {
+        if (StringUtils.isBlank(keyword)){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Team> teamList = teamMapper.findByKeywords("%" + keyword + "%");
+        List<TeamVO> teamVOList = new ArrayList<>();
+        for (Team team:teamList) {
+            teamVOList.add(convert(team));
+        }
+        PageInfo pageInfo = new PageInfo(teamList);
+        pageInfo.setList(teamVOList);
+        return ServerResponse.createServerResponseBySucess(pageInfo);
     }
 
     private TeamVO convert(Team team){

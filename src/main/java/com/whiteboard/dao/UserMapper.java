@@ -23,4 +23,6 @@ public interface UserMapper {
     Integer findByPhone(@Param("phone") String phone);
 
     User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+
+    List<User> findByKeywords(@Param("keyword") String keyword);
 }

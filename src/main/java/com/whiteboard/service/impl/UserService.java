@@ -1,5 +1,7 @@
 package com.whiteboard.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.whiteboard.common.Const;
 import com.whiteboard.common.ResponseCode;
 import com.whiteboard.dao.UserMapper;
@@ -12,6 +14,9 @@ import com.whiteboard.vo.UserVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -137,5 +142,22 @@ public class UserService implements IUserService {
         User newUser = userMapper.selectByPrimaryKey(user.getUid());
         UserVO userVO = convert(newUser);
         return ServerResponse.createServerResponseBySucess(userVO);
+    }
+
+    @Override
+    public ServerResponse searchLogic(String keyword, Integer pageNum, Integer pageSize, String orderBy) {
+        if (StringUtils.isBlank(keyword)){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> userList = userMapper.findByKeywords("%" + keyword + "%");
+        List<UserVO> userVOList = new ArrayList<>();
+        for (User user:userList) {
+            userVOList.add(convert(user));
+        }
+        PageInfo pageInfo = new PageInfo(userList);
+        pageInfo.setList(userVOList);
+        return ServerResponse.createServerResponseBySucess(pageInfo);
     }
 }

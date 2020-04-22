@@ -19,4 +19,12 @@ public class TeamController {
         return  teamService.createLogic(team);
     }
 
+    @RequestMapping(value = "team/search")
+    public ServerResponse search(String keyword,
+                                 @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                 String orderBy){
+        ServerResponse serverResponse = teamService.searchLogic(keyword, pageNum, pageSize, orderBy);
+        return serverResponse;
+    }
 }

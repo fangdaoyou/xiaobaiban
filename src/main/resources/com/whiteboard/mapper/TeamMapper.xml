@@ -44,4 +44,10 @@
     from baiban_team
     where team_name = #{team_name}
   </select>
+
+  <select id="findByKeywords" parameterType="map" resultMap="BaseResultMap">
+    select team_id, team_name, reg_time, update_time, member_count, avatar
+    from baiban_team
+    where team_name like #{keyword}
+  </select>
 </mapper>
