@@ -27,9 +27,9 @@ public class TeamService implements ITeamService {
     @Autowired
     UserMapper userMapper;
     @Override
-    public ServerResponse createLogic(Team team, Integer uid) {
+    public ServerResponse createLogic(Team team, UserVO userInfo) {
         //数据校验
-        if (team == null || uid == null){
+        if (team == null){
             return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
                     ResponseCode.PARAM_EMPTY.getMsg());
         }
@@ -44,12 +44,7 @@ public class TeamService implements ITeamService {
             return ServerResponse.createServerResponseByFail(ResponseCode.TEAM_NAME_EXISTS.getCode(),
                     ResponseCode.TEAM_NAME_EXISTS.getMsg());
         }
-        //用户是否存在
-        User user = userMapper.selectByPrimaryKey(uid);
-        if (user == null){
-            return ServerResponse.createServerResponseByFail(ResponseCode.USERNAME_NOT_EXISTS.getCode(),
-                    ResponseCode.USERNAME_NOT_EXISTS.getMsg());
-        }
+        User user = userMapper.selectByPrimaryKey(userInfo.getUid());
         //用户是否已经在团队中
         if (user.getTeamId() != Const.DEFAULT_TEAM_ID){
             return ServerResponse.createServerResponseByFail(ResponseCode.USER_IS_IN_TEAM.getCode(),
@@ -67,6 +62,8 @@ public class TeamService implements ITeamService {
         //修改user的权限
         user.setTeamId(team.getTeamId());
         user.setRole((byte)Const.ROLE_ADMIN);
+        userInfo.setTeamId(team.getTeamId());
+        userInfo.setRole((byte)Const.ROLE_ADMIN);
         result = userMapper.updateByPrimaryKey(user);
         if (result == 0){
             return ServerResponse.createServerResponseByFail(ResponseCode.REGISTER_ERROR.getCode(),
@@ -176,7 +173,11 @@ public class TeamService implements ITeamService {
     }
 
     @Override
-    public ServerResponse disbandLogic(Integer teamId) {
+    public ServerResponse disbandLogic(Integer teamId, UserVO opUser) {
+        if (opUser.getTeamId() != teamId || opUser.getRole() != Const.ROLE_ADMIN){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
         if (teamId == null){
             return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
                     ResponseCode.PARAM_EMPTY.getMsg());
@@ -196,7 +197,66 @@ public class TeamService implements ITeamService {
                         ResponseCode.UPDATE_ERROR.getMsg());
             }
         }
-        teamMapper.deleteByPrimaryKey(teamId);
+        opUser.setTeamId(0);
+        opUser.setRole((byte) Const.ROLE_USER);
+        Integer result = teamMapper.deleteByPrimaryKey(teamId);
+        if (result == 0){
+            return ServerResponse.createServerResponseByFail(ResponseCode.DISBAND_ERROR.getCode(),
+                    ResponseCode.DISBAND_ERROR.getMsg());
+        }
+        return ServerResponse.createServerResponseBySucess(opUser);
+    }
+
+    @Override
+    public ServerResponse quitLogic(UserVO opUser, Integer uid) {
+        //参数校验
+        if (uid == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+        User user = userMapper.selectByPrimaryKey(uid);
+        if (user == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.USERNAME_NOT_EXISTS.getCode(),
+                    ResponseCode.USERNAME_NOT_EXISTS.getMsg());
+        }
+        Team team = teamMapper.selectByPrimaryKey(opUser.getTeamId());
+            //队伍不存在
+        if (team == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.TEAM_NOT_EXISTS.getCode(),
+                    ResponseCode.TEAM_NOT_EXISTS.getMsg());
+        }
+        //权限校验
+            //不在同一队伍
+        if (opUser.getTeamId() != user.getTeamId()){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+            //opUser权限不足
+        if (opUser.getUid() != uid && opUser.getRole() != Const.ROLE_ADMIN){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+        //退出团队
+        user.setRole((byte) Const.ROLE_USER);
+        user.setTeamId(0);
+        Integer result = userMapper.updateByPrimaryKey(user);
+        if (result == 0){
+            return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
+                    ResponseCode.UPDATE_ERROR.getMsg());
+        }
+        //团队人数-1
+        if (team.getMemberCount() == 1){
+            result = teamMapper.deleteByPrimaryKey(team.getTeamId());
+        }
+        else {
+            team.setMemberCount(team.getMemberCount()-1);
+            result = teamMapper.updateByPrimaryKey(team);
+        }
+        if (result == 0){
+            return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
+                    ResponseCode.UPDATE_ERROR.getMsg());
+        }
+
         return ServerResponse.createServerResponseBySucess();
     }
 

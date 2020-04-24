@@ -1,11 +1,13 @@
 package com.whiteboard.service;
 
 import com.whiteboard.pojo.Team;
+import com.whiteboard.pojo.User;
 import com.whiteboard.utils.ServerResponse;
+import com.whiteboard.vo.UserVO;
 import org.springframework.web.servlet.mvc.ServletWrappingController;
 
 public interface ITeamService {
-    public ServerResponse createLogic(Team team, Integer uid);
+    public ServerResponse createLogic(Team team, UserVO userInfo);
 
     /**
      * 查询团队
@@ -42,5 +44,7 @@ public interface ITeamService {
      * @param teamId
      * @return
      */
-    public ServerResponse disbandLogic(Integer teamId);
+    public ServerResponse disbandLogic(Integer teamId, UserVO opUser);
+
+    public ServerResponse quitLogic(UserVO opUser, Integer uid);
 }

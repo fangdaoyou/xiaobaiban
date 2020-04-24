@@ -2,6 +2,7 @@ package com.whiteboard.controller;
 
 import com.whiteboard.common.Const;
 import com.whiteboard.pojo.Team;
+import com.whiteboard.pojo.User;
 import com.whiteboard.service.ITeamService;
 import com.whiteboard.utils.ServerResponse;
 import com.whiteboard.vo.UserVO;
@@ -21,12 +22,16 @@ public class TeamController {
     @RequestMapping(value = "team/create")
     public ServerResponse register(Team team, HttpSession session){
         UserVO userInfo = (UserVO)session.getAttribute(Const.CURRENT_USER);
-        return  teamService.createLogic(team, userInfo.getUid());
+        ServerResponse serverResponse = teamService.createLogic(team, userInfo);
+        if (serverResponse.isSucess()){//更新session用户信息
+            session.setAttribute(Const.CURRENT_USER, userInfo);
+        }
+        return serverResponse;
     }
 
     @RequestMapping(value = "team/search")
     public ServerResponse search(String keyword,
-                                 @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                 @RequestParam(value = "pageN um", defaultValue ="1") Integer pageNum,
                                  @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                  String orderBy){
         ServerResponse serverResponse = teamService.searchLogic(keyword, pageNum, pageSize, orderBy);
@@ -52,8 +57,24 @@ public class TeamController {
     }
 
     @RequestMapping(value = "team/disband")
-    public ServerResponse disband(Integer teamId){
-        ServerResponse serverResponse = teamService.disbandLogic(teamId);
+    public ServerResponse disband(Integer teamId, HttpSession session){
+        UserVO opUser = (UserVO) session.getAttribute(Const.CURRENT_USER);
+
+        ServerResponse serverResponse = teamService.disbandLogic(teamId, opUser);
+        if (serverResponse.isSucess()){//更新session用户信息
+            session.setAttribute(Const.CURRENT_USER, serverResponse.getData());
+        }
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "team/quit")
+    public ServerResponse quit(Integer uid, HttpSession session){
+
+        UserVO opUser = (UserVO) session.getAttribute(Const.CURRENT_USER);
+        ServerResponse serverResponse = teamService.quitLogic(opUser, uid);
+        if (serverResponse.isSucess()){//更新session用户信息
+            session.setAttribute(Const.CURRENT_USER, opUser);
+        }
         return serverResponse;
     }
 }

@@ -22,6 +22,8 @@ public enum  ResponseCode {
     TEAM_NOT_EXISTS(19,"团队不存在"),
     PARAM_ERROR(20,"非法参数"),
     JOIN_TEAM_ERROR(21,"加入团队失败"),
+    PRIVILEGE_ERROR(22,"权限错误"),
+    DISBAND_ERROR(22,"解散失败"),
     ;
     private int code;
     private String msg;
