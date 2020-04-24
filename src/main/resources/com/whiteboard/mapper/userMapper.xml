@@ -104,5 +104,11 @@
           team_id like #{keyword}
   </select>
 
+  <select id="findByTeamId" parameterType="map" resultMap="BaseResultMap">
+    select uid, username, nickname, reg_time, update_time, role, avatar, email,
+    team_id, phone
+    from baiban_user
+    where team_id = #{team_id}
+  </select>
 
 </mapper>

@@ -12,6 +12,7 @@ import com.whiteboard.service.ITeamService;
 import com.whiteboard.utils.DateUtil;
 import com.whiteboard.utils.ServerResponse;
 import com.whiteboard.vo.TeamVO;
+import com.whiteboard.vo.UserVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -138,7 +139,68 @@ public class TeamService implements ITeamService {
         return ServerResponse.createServerResponseBySucess();
     }
 
-    private TeamVO convert(Team team){
+    @Override
+    public ServerResponse infoLogic(Integer teamId) {
+        if (teamId == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+        Team team = teamMapper.selectByPrimaryKey(teamId);
+        if (team == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.TEAM_NOT_EXISTS.getCode(),
+                    ResponseCode.TEAM_NOT_EXISTS.getMsg());
+        }
+
+        TeamVO teamVO = convert(team);
+
+        return ServerResponse.createServerResponseBySucess(teamVO);
+    }
+
+    @Override
+    public ServerResponse matesLogic(Integer teamId) {
+        if (teamId == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+        Team team = teamMapper.selectByPrimaryKey(teamId);
+        if (team == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.TEAM_NOT_EXISTS.getCode(),
+                    ResponseCode.TEAM_NOT_EXISTS.getMsg());
+        }
+        List<User> userList = userMapper.findByTeamId(teamId);
+        List<UserVO> userVOList = new ArrayList<>();
+        for (User user:userList) {
+            userVOList.add(UserService.convert(user));
+        }
+        return ServerResponse.createServerResponseBySucess(userVOList);
+    }
+
+    @Override
+    public ServerResponse disbandLogic(Integer teamId) {
+        if (teamId == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+        Team team = teamMapper.selectByPrimaryKey(teamId);
+        if (team == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.TEAM_NOT_EXISTS.getCode(),
+                    ResponseCode.TEAM_NOT_EXISTS.getMsg());
+        }
+        List<User> userList = userMapper.findByTeamId(teamId);
+        for (User user:userList) {
+            user.setRole((byte) Const.ROLE_USER);
+            user.setTeamId(Const.DEFAULT_TEAM_ID);
+            int result = userMapper.updateByPrimaryKey(user);
+            if (result == 0){
+                return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
+                        ResponseCode.UPDATE_ERROR.getMsg());
+            }
+        }
+        teamMapper.deleteByPrimaryKey(teamId);
+        return ServerResponse.createServerResponseBySucess();
+    }
+
+    public static TeamVO convert(Team team){
         TeamVO teamVO = new TeamVO();
         teamVO.setTeamName(team.getTeamName());
         teamVO.setAvatar(team.getAvatar());

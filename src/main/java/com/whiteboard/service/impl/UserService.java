@@ -51,7 +51,7 @@ public class UserService implements IUserService {
         return ServerResponse.createServerResponseBySucess(convert(user));
     }
 
-    public UserVO convert(User user){
+    public static UserVO convert(User user){
         UserVO userVO = new UserVO();
         userVO.setUid(user.getUid());
         userVO.setAvatar(user.getAvatar());

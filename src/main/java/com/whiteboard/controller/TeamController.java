@@ -38,4 +38,22 @@ public class TeamController {
         ServerResponse serverResponse = teamService.addLogic(uid, teamId, role);
         return serverResponse;
     }
+
+    @RequestMapping(value = "team/info")
+    public ServerResponse info(Integer teamId){
+        ServerResponse serverResponse = teamService.infoLogic(teamId);
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "team/mates")
+    public ServerResponse mates(Integer teamId){
+        ServerResponse serverResponse = teamService.matesLogic(teamId);
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "team/disband")
+    public ServerResponse disband(Integer teamId){
+        ServerResponse serverResponse = teamService.disbandLogic(teamId);
+        return serverResponse;
+    }
 }
