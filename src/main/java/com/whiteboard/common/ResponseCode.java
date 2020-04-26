@@ -24,6 +24,10 @@ public enum  ResponseCode {
     JOIN_TEAM_ERROR(21,"加入团队失败"),
     PRIVILEGE_ERROR(22,"权限错误"),
     DISBAND_ERROR(22,"解散失败"),
+    TOPIC_EMPTY(23,"主题为空"),
+    DESCRIPTION_EMPTY(24,"描述为空"),
+    DDL_EMPTY(25,"截止时间为空"),
+    PRIORITY_EMPTY(26,"紧急程度为空"),
     ;
     private int code;
     private String msg;

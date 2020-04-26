@@ -30,15 +30,12 @@ public class TeamController {
     }
 
     @RequestMapping(value = "team/search")
-    public ServerResponse search(String keyword,
-                                 @RequestParam(value = "pageN um", defaultValue ="1") Integer pageNum,
-                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                 String orderBy){
+    public ServerResponse search(String keyword, @RequestParam(value = "pageN um", defaultValue ="1") Integer pageNum, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, String orderBy){
         ServerResponse serverResponse = teamService.searchLogic(keyword, pageNum, pageSize, orderBy);
         return serverResponse;
     }
 
-    @RequestMapping(value = "team/add")
+    @RequestMapping(value = "team/join")
     public ServerResponse add(Integer uid, Integer teamId, Integer role){
         ServerResponse serverResponse = teamService.addLogic(uid, teamId, role);
         return serverResponse;
