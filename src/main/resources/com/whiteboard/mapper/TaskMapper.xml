@@ -18,28 +18,41 @@
     where task_id = #{taskId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.whiteboard.pojo.Task" useGeneratedKeys="true" keyProperty="taskId">
-    insert into baiban_task (task_id, team_id, create_time, 
+    insert into baiban_task (task_id, team_id, create_time, update_time,
       ddl_time, topic,
       description, sponsor_id, state, 
       priority)
-    values (#{taskId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, now(),
+    values (#{taskId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, now(), now(),
       #{ddlTime,jdbcType=TIMESTAMP}, #{topic,jdbcType=VARCHAR},
       #{description,jdbcType=VARCHAR}, #{sponsorId,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
       #{priority,jdbcType=INTEGER})
   </insert>
+
   <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.Task">
     update baiban_task
-    set team_id = #{teamId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+    set
+    <if test="ddlTime!=null">
       ddl_time = #{ddlTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="finishTime!=null">
       finish_time = #{finishTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="topic!=null">
       topic = #{topic,jdbcType=VARCHAR},
+    </if>
+    <if test="description!=null">
       description = #{description,jdbcType=VARCHAR},
-      sponsor_id = #{sponsorId,jdbcType=INTEGER},
+    </if>
+    <if test="state!=null">
       state = #{state,jdbcType=INTEGER},
-      priority = #{priority,jdbcType=INTEGER}
+    </if>
+    <if test="priority!=null">
+      priority = #{priority,jdbcType=INTEGER},
+    </if>
+      update_time = now()
     where task_id = #{taskId,jdbcType=INTEGER}
   </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select task_id, team_id, create_time, ddl_time, finish_time, topic, description, 
     sponsor_id, state, priority
@@ -50,5 +63,31 @@
     select task_id, team_id, create_time, ddl_time, finish_time, topic, description, 
     sponsor_id, state, priority
     from baiban_task
+  </select>
+
+  <select id="findByTeamId" resultMap="BaseResultMap">
+    select task_id, team_id, create_time, ddl_time, finish_time, topic, description,
+    sponsor_id, state, priority
+    from baiban_task
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="findByWorkerId" resultMap="BaseResultMap">
+    select task_id, team_id, create_time, ddl_time, finish_time, topic, description,
+    sponsor_id, state, priority
+    from baiban_task
+    where task_id in(
+        select task_id
+        from baiban_user_task
+        where uid = (#{uid,jdbcType=INTEGER})
+    )
+  </select>
+
+  <select id="findBySponsorId" resultMap="BaseResultMap">
+    select task_id, team_id, create_time, ddl_time, finish_time, topic, description,
+    sponsor_id, state, priority
+    from baiban_task
+    where sponsor_id = (#{uid,jdbcType=INTEGER})
   </select>
 </mapper>

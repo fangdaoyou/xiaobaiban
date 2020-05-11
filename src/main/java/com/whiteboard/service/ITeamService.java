@@ -41,10 +41,11 @@ public interface ITeamService {
 
     /**
      * 团队解散
-     * @param teamId
      * @return
      */
-    public ServerResponse disbandLogic(Integer teamId, UserVO opUser);
+    public ServerResponse disbandLogic(UserVO opUser);
 
     public ServerResponse quitLogic(UserVO opUser, Integer uid);
+
+    public ServerResponse setRoleLogic(Integer uid, Byte role, UserVO opUser);
 }

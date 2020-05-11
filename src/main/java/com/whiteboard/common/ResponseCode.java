@@ -28,6 +28,7 @@ public enum  ResponseCode {
     DESCRIPTION_EMPTY(24,"描述为空"),
     DDL_EMPTY(25,"截止时间为空"),
     PRIORITY_EMPTY(26,"紧急程度为空"),
+    TASK_NOT_EXISTS(27,"任务不存在"),
     ;
     private int code;
     private String msg;

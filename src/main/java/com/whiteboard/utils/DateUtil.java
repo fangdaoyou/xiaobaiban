@@ -15,6 +15,9 @@ public class DateUtil {
     public static final String STANDARD = "yyyy-MM-dd HH:mm:ss";
 
     public static Date string2Date(String strDate){
+        if (strDate == null){
+            return null;
+        }
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(STANDARD);
         return dateTimeFormatter.parseDateTime(strDate).toDate();
     }
@@ -40,4 +43,7 @@ public class DateUtil {
         return dateTime.toString(format);
     }
 
+    public static void main(String[] args) {
+        System.out.println(string2Date("2020-05-27 21:25:53"));
+    }
 }

@@ -111,4 +111,15 @@
     where team_id = #{team_id}
   </select>
 
+  <select id="findByTaskId" parameterType="map" resultMap="BaseResultMap">
+    select uid, username, nickname, reg_time, update_time, role, avatar, email,
+    team_id, phone
+    from baiban_user
+    where uid in(
+        select uid
+        from baiban_user_task
+        where task_id = #{task_id}
+    )
+  </select>
+
 </mapper>

@@ -6,6 +6,7 @@ import com.whiteboard.common.Const;
 import com.whiteboard.common.ResponseCode;
 import com.whiteboard.dao.TeamMapper;
 import com.whiteboard.dao.UserMapper;
+import com.whiteboard.exception.WhiteBoardException;
 import com.whiteboard.pojo.Team;
 import com.whiteboard.pojo.User;
 import com.whiteboard.service.ITeamService;
@@ -16,6 +17,7 @@ import com.whiteboard.vo.UserVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,15 +175,13 @@ public class TeamService implements ITeamService {
     }
 
     @Override
-    public ServerResponse disbandLogic(Integer teamId, UserVO opUser) {
-        if (opUser.getTeamId() != teamId || opUser.getRole() != Const.ROLE_ADMIN){
+    @Transactional(rollbackFor = {WhiteBoardException.class})
+    public ServerResponse disbandLogic(UserVO opUser) {
+        if (opUser.getTeamId() == Const.DEFAULT_TEAM_ID || opUser.getRole() != Const.ROLE_ADMIN){
             return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
                     ResponseCode.PRIVILEGE_ERROR.getMsg());
         }
-        if (teamId == null){
-            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
-                    ResponseCode.PARAM_EMPTY.getMsg());
-        }
+        Integer teamId = opUser.getTeamId();
         Team team = teamMapper.selectByPrimaryKey(teamId);
         if (team == null){
             return ServerResponse.createServerResponseByFail(ResponseCode.TEAM_NOT_EXISTS.getCode(),
@@ -193,16 +193,14 @@ public class TeamService implements ITeamService {
             user.setTeamId(Const.DEFAULT_TEAM_ID);
             int result = userMapper.updateByPrimaryKey(user);
             if (result == 0){
-                return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
-                        ResponseCode.UPDATE_ERROR.getMsg());
+                throw new WhiteBoardException("解散成员失败");
             }
         }
         opUser.setTeamId(0);
         opUser.setRole((byte) Const.ROLE_USER);
         Integer result = teamMapper.deleteByPrimaryKey(teamId);
         if (result == 0){
-            return ServerResponse.createServerResponseByFail(ResponseCode.DISBAND_ERROR.getCode(),
-                    ResponseCode.DISBAND_ERROR.getMsg());
+            throw new WhiteBoardException("解散团队失败");
         }
         return ServerResponse.createServerResponseBySucess(opUser);
     }
@@ -257,6 +255,31 @@ public class TeamService implements ITeamService {
                     ResponseCode.UPDATE_ERROR.getMsg());
         }
 
+        return ServerResponse.createServerResponseBySucess();
+    }
+
+    @Override
+    public ServerResponse setRoleLogic(Integer uid, Byte role, UserVO opUser) {
+        if (uid == null || role == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PARAM_EMPTY.getCode(),
+                    ResponseCode.PARAM_EMPTY.getMsg());
+        }
+        User user = userMapper.selectByPrimaryKey(uid);
+        if (user == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.USERNAME_NOT_EXISTS.getCode(),
+                    ResponseCode.USERNAME_NOT_EXISTS.getMsg());
+        }
+        //操作人无团队、操作人与被操作人不在同一团队、操作人不是管理员
+        if (opUser.getTeamId() == Const.DEFAULT_TEAM_ID || user.getTeamId() != opUser.getTeamId() || opUser.getRole() != Const.ROLE_ADMIN){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+        user.setRole(role);
+        Integer result = userMapper.updateByPrimaryKey(user);
+        if (result == 0){
+            return ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
+                    ResponseCode.UPDATE_ERROR.getMsg());
+        }
         return ServerResponse.createServerResponseBySucess();
     }
 

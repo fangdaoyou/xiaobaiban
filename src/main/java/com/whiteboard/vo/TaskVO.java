@@ -1,6 +1,7 @@
 package com.whiteboard.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class TaskVO {
     private Integer taskId;
@@ -22,6 +23,16 @@ public class TaskVO {
     private Integer state;
 
     private Integer priority;
+
+    private List<UserVO> workerList;
+
+    public List<UserVO> getWorkerList() {
+        return workerList;
+    }
+
+    public void setWorkerList(List<UserVO> workerList) {
+        this.workerList = workerList;
+    }
 
     public Integer getTaskId() {
         return taskId;

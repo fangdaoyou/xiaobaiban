@@ -1,6 +1,8 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.common.Const;
+import com.whiteboard.common.ResponseCode;
+import com.whiteboard.exception.WhiteBoardException;
 import com.whiteboard.pojo.Team;
 import com.whiteboard.pojo.User;
 import com.whiteboard.service.ITeamService;
@@ -30,14 +32,18 @@ public class TeamController {
     }
 
     @RequestMapping(value = "team/search")
-    public ServerResponse search(String keyword, @RequestParam(value = "pageN um", defaultValue ="1") Integer pageNum, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, String orderBy){
+    public ServerResponse search(String keyword,
+                                 @RequestParam(value = "pageNum", defaultValue ="1") Integer pageNum,
+                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                 String orderBy){
         ServerResponse serverResponse = teamService.searchLogic(keyword, pageNum, pageSize, orderBy);
         return serverResponse;
     }
 
     @RequestMapping(value = "team/join")
-    public ServerResponse add(Integer uid, Integer teamId, Integer role){
-        ServerResponse serverResponse = teamService.addLogic(uid, teamId, role);
+    public ServerResponse add(Integer uid, Integer role, HttpSession session){
+        UserVO userInfo = (UserVO)session.getAttribute(Const.CURRENT_USER);
+        ServerResponse serverResponse = teamService.addLogic(uid, userInfo.getTeamId(), role);
         return serverResponse;
     }
 
@@ -54,10 +60,16 @@ public class TeamController {
     }
 
     @RequestMapping(value = "team/disband")
-    public ServerResponse disband(Integer teamId, HttpSession session){
+    public ServerResponse disband(HttpSession session){
         UserVO opUser = (UserVO) session.getAttribute(Const.CURRENT_USER);
+        ServerResponse serverResponse;
+        try {
+            serverResponse = teamService.disbandLogic(opUser);
+        }catch (WhiteBoardException e){
+            serverResponse = ServerResponse.createServerResponseByFail(ResponseCode.UPDATE_ERROR.getCode(),
+                    e.getMsg());
+        }
 
-        ServerResponse serverResponse = teamService.disbandLogic(teamId, opUser);
         if (serverResponse.isSucess()){//更新session用户信息
             session.setAttribute(Const.CURRENT_USER, serverResponse.getData());
         }
@@ -72,6 +84,13 @@ public class TeamController {
         if (serverResponse.isSucess()){//更新session用户信息
             session.setAttribute(Const.CURRENT_USER, opUser);
         }
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "team/set_role")
+    public ServerResponse setRole(Integer uid, Byte role, HttpSession session){
+        UserVO opUser = (UserVO) session.getAttribute(Const.CURRENT_USER);
+        ServerResponse serverResponse = teamService.setRoleLogic(uid, role, opUser);
         return serverResponse;
     }
 }

@@ -27,4 +27,6 @@ public interface UserMapper {
     List<User> findByKeywords(@Param("keyword") String keyword);
 
     List<User> findByTeamId(@Param("team_id") Integer teamId);
+
+    List<User> findByTaskId(@Param("task_id") Integer taskId);
 }
