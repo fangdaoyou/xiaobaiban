@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whiteboard.dao.UserClockInMapper">
+  <resultMap id="BaseResultMap" type="com.whiteboard.pojo.UserClockIn">
+    <id column="clock_id" jdbcType="INTEGER" property="clockId" />
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from baiban_user_clock_in
+    where clock_id = #{clockId,jdbcType=INTEGER}
+      and uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.whiteboard.pojo.UserClockIn">
+    insert into baiban_user_clock_in (clock_id, uid, update_time, 
+      longitude, latitude)
+    values (#{clockId,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, now(),
+      #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.UserClockIn">
+    update baiban_user_clock_in
+    set update_time = #{updateTime,jdbcType=TIMESTAMP},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL}
+    where clock_id = #{clockId,jdbcType=INTEGER}
+      and uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select clock_id, uid, update_time, longitude, latitude
+    from baiban_user_clock_in
+    where clock_id = #{clockId,jdbcType=INTEGER}
+      and uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select clock_id, uid, update_time, longitude, latitude
+    from baiban_user_clock_in
+  </select>
+</mapper>

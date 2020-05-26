@@ -24,6 +24,7 @@ public class SpringBootConfig implements WebMvcConfigurer {
         interceptedUrl.add("/portal/user/**");
         interceptedUrl.add("/portal/team/**");
         interceptedUrl.add("/portal/task/**");
+        interceptedUrl.add("/portal/clock_in/**");
 
         registry.addInterceptor(portalLogin).addPathPatterns(interceptedUrl)
                 .excludePathPatterns(excluedUrl);

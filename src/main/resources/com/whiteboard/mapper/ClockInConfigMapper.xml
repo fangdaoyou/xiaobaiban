@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whiteboard.dao.ClockInConfigMapper">
+  <resultMap id="BaseResultMap" type="com.whiteboard.pojo.ClockInConfig">
+    <id column="clock_id" jdbcType="INTEGER" property="clockId" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="ddl_time" jdbcType="TIMESTAMP" property="ddlTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="area" jdbcType="INTEGER" property="area" />
+    <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from baiban_clock_in_config
+    where clock_id = #{clockId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.whiteboard.pojo.ClockInConfig">
+    insert into baiban_clock_in_config (clock_id, team_id, create_time, 
+      start_time, update_time, ddl_time, 
+      state, longitude, latitude, 
+      area, member_count)
+    values (#{clockId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, now(),
+      #{startTime,jdbcType=TIMESTAMP}, now(), #{ddlTime,jdbcType=TIMESTAMP},
+      #{state,jdbcType=INTEGER}, #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, 
+      #{area,jdbcType=INTEGER}, #{memberCount,jdbcType=INTEGER})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.ClockInConfig">
+    update baiban_clock_in_config
+    set
+    <if test="startTime!=null">
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="ddlTime!=null">
+      ddl_time = #{ddlTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="longitude!=null">
+      longitude = #{longitude,jdbcType=DECIMAL},
+    </if>
+    <if test="latitude!=null">
+      latitude = #{latitude,jdbcType=DECIMAL},
+    </if>
+    <if test="area!=null">
+      area = #{area,jdbcType=INTEGER},
+    </if>
+    <if test="memberCount!=null">
+      member_count = #{memberCount,jdbcType=INTEGER},
+    </if>
+    update_time = now()
+    where Clock_id = #{clockId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select clock_id, team_id, create_time, start_time, update_time, ddl_time, state, 
+    longitude, latitude, area, member_count
+    from baiban_clock_in_config
+    where clock_id = #{clockId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select clock_id, team_id, create_time, start_time, update_time, ddl_time, state, 
+    longitude, latitude, area, member_count
+    from baiban_clock_in_config
+  </select>
+
+  <update id="updateState" parameterType="com.whiteboard.pojo.ClockInConfig">
+    update baiban_clock_in_config
+    set
+      state = #{state,jdbcType=INTEGER},
+      update_time = now()
+    where Clock_id = #{clockId,jdbcType=INTEGER}
+  </update>
+
+  <select id="findByTeamId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select Clock_id, team_id, create_time, start_time, update_time, ddl_time, state,
+    longitude, latitude, area, member_count
+    from baiban_clock_in_config
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </select>
+</mapper>

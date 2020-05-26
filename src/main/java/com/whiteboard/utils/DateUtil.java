@@ -5,7 +5,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 时间格式化
@@ -13,6 +15,15 @@ import java.util.Date;
 public class DateUtil {
 
     public static final String STANDARD = "yyyy-MM-dd HH:mm:ss";
+
+    public static Date getTime(){
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(STANDARD);
+
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+
+        return d;
+    }
 
     public static Date string2Date(String strDate){
         if (strDate == null){
@@ -45,5 +56,6 @@ public class DateUtil {
 
     public static void main(String[] args) {
         System.out.println(string2Date("2020-05-27 21:25:53"));
+        System.out.println(date2String(getTime()));
     }
 }

@@ -64,8 +64,12 @@
 <!--               enableSelectByExample="false" enableUpdateByExample="false"/>-->
 <!--        <table tableName="baiban_task" domainObjectName="Task" enableCountByExample="false" enableDeleteByExample="false"-->
 <!--               enableSelectByExample="false" enableUpdateByExample="false"/>-->
-        <table tableName="baiban_user_task" domainObjectName="UserForTask" enableCountByExample="false" enableDeleteByExample="false"
+<!--        <table tableName="baiban_user_task" domainObjectName="UserForTask" enableCountByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" enableUpdateByExample="false"/>-->
+        <table tableName="baiban_clock_in_config" domainObjectName="ClockInConfig" enableCountByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false"/>
+<!--        <table tableName="baiban_user_clock_in" domainObjectName="UserClockIn" enableCountByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" enableUpdateByExample="false"/>-->
 
     </context>
 </generatorConfiguration>

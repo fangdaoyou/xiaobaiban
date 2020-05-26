@@ -29,6 +29,16 @@ public enum  ResponseCode {
     DDL_EMPTY(25,"截止时间为空"),
     PRIORITY_EMPTY(26,"紧急程度为空"),
     TASK_NOT_EXISTS(27,"任务不存在"),
+    START_TIME_EMPTY(28,"开始时间为空"),
+    AREA_EMPTY(29,"范围为空"),
+    CLOCK_NOT_EXISTS(30,"设置不存在"),
+    DISTANCE_ERROR(31,"不在范围内"),
+    LATITUDE_EMPTY(32,"经度为空"),
+    LONGITUDE_EMPTY(33,"纬度为空"),
+    CLOCK_ID_EMPTY(34,"打卡ID为空"),
+    CLOCK_IN_EXISTS(35,"重复签到"),
+    CLOCK_IN_TIME_OUT(36,"签到超时"),
+    CLOCK_IN_NOT_START(37,"签到未开始"),
     ;
     private int code;
     private String msg;
