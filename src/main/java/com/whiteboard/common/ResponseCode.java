@@ -39,6 +39,7 @@ public enum  ResponseCode {
     CLOCK_IN_EXISTS(35,"重复签到"),
     CLOCK_IN_TIME_OUT(36,"签到超时"),
     CLOCK_IN_NOT_START(37,"签到未开始"),
+    TYPE_EMPTY(38,"类型为空"),
     ;
     private int code;
     private String msg;

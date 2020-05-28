@@ -15,4 +15,8 @@ public class Const {
     public static final String DEFAULT_LONGITUDE = "0";
     public static final String DEFAULT_LATITUDE = "0";
     public static final int DEFAULT_AREA = 0;
+    public static final int NOT_READ = 0;
+    public static final int HAVE_READ = 1;
+    public static final int MESSAGE_SIMPLE = 0;
+    public static final int MESSAGE_COMPLICATED = 1;
 }

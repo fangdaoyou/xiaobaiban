@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whiteboard.dao.TeamMessageMapper">
+  <resultMap id="BaseResultMap" type="com.whiteboard.pojo.TeamMessage">
+    <id column="message_id" jdbcType="INTEGER" property="messageId" />
+    <result column="send_uid" jdbcType="INTEGER" property="sendUid" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from baiban_message_team
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.whiteboard.pojo.TeamMessage" useGeneratedKeys="true" keyProperty="messageId">
+    insert into baiban_message_team (message_id, send_uid, team_id, 
+      send_time, description, type, 
+      priority)
+    values (#{messageId,jdbcType=INTEGER}, #{sendUid,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, 
+      now(), #{description,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{priority,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.TeamMessage">
+    update baiban_message_team
+    set send_uid = #{sendUid,jdbcType=INTEGER},
+      team_id = #{teamId,jdbcType=INTEGER},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      priority = #{priority,jdbcType=INTEGER}
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select message_id, send_uid, team_id, send_time, description, type, priority
+    from baiban_message_team
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select message_id, send_uid, team_id, send_time, description, type, priority
+    from baiban_message_team
+  </select>
+
+  <select id="findUnread" resultMap="BaseResultMap">
+    select message_id, send_uid, team_id, send_time, description, type, priority
+    from baiban_message_team
+    where message_id in(
+        select message_id
+        from baiban_user_read_team_message
+        where status = 0 and uid = #{uid,jdbcType=INTEGER}
+    )and type = #{type,jdbcType=INTEGER}
+  </select>
+
+</mapper>

@@ -58,4 +58,26 @@ public class ClockInController {
         ServerResponse serverResponse = clockInService.listTeamLogic(userInfo, pageNum, pageSize, orderBy);
         return serverResponse;
     }
+
+    @RequestMapping(value = "clock_in/have_clock_in")
+    public ServerResponse haveClockIn(Integer clockId,
+                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                      String orderBy,
+                                      HttpSession session){
+        UserVO userInfo = (UserVO)session.getAttribute(Const.CURRENT_USER);
+        ServerResponse serverResponse = clockInService.haveClockInLogic(clockId, userInfo, pageNum, pageSize, orderBy);
+        return serverResponse;
+    }
+
+    @RequestMapping(value = "clock_in/have_not_clock_in")
+    public ServerResponse haveNotClockIn(Integer clockId,
+                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                      String orderBy,
+                                      HttpSession session){
+        UserVO userInfo = (UserVO)session.getAttribute(Const.CURRENT_USER);
+        ServerResponse serverResponse = clockInService.haveNotClockInLogic(clockId, userInfo, pageNum, pageSize, orderBy);
+        return serverResponse;
+    }
 }

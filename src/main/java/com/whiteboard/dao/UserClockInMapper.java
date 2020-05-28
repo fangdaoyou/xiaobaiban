@@ -1,5 +1,6 @@
 package com.whiteboard.dao;
 
+import com.whiteboard.pojo.User;
 import com.whiteboard.pojo.UserClockIn;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -14,4 +15,6 @@ public interface UserClockInMapper {
     List<UserClockIn> selectAll();
 
     int updateByPrimaryKey(UserClockIn record);
+
+
 }

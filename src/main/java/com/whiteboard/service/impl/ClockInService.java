@@ -7,11 +7,9 @@ import com.whiteboard.common.ResponseCode;
 import com.whiteboard.dao.ClockInConfigMapper;
 import com.whiteboard.dao.TeamMapper;
 import com.whiteboard.dao.UserClockInMapper;
+import com.whiteboard.dao.UserMapper;
 import com.whiteboard.exception.WhiteBoardException;
-import com.whiteboard.pojo.ClockInConfig;
-import com.whiteboard.pojo.Task;
-import com.whiteboard.pojo.Team;
-import com.whiteboard.pojo.UserClockIn;
+import com.whiteboard.pojo.*;
 import com.whiteboard.service.IClockInService;
 import com.whiteboard.utils.DateUtil;
 import com.whiteboard.utils.DistanceCalculate;
@@ -38,6 +36,8 @@ public class ClockInService implements IClockInService {
     UserClockInMapper userClockInMapper;
     @Autowired
     TeamMapper teamMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public ServerResponse createLogic(ClockInConfigVO clockInConfigVO, UserVO userInfo) {
@@ -213,8 +213,6 @@ public class ClockInService implements IClockInService {
 
     @Override
     public ServerResponse listTeamLogic(UserVO userInfo, Integer pageNum, Integer pageSize, String orderBy) {
-        PageHelper.startPage(pageNum, pageSize);
-
         Integer teamId = userInfo.getTeamId();
         if (teamId == Const.DEFAULT_TEAM_ID || userInfo.getRole() != Const.ROLE_ADMIN){
             return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
@@ -233,11 +231,72 @@ public class ClockInService implements IClockInService {
             clockInConfigVO.setNotMemberCount(team.getMemberCount()-clockInConfig.getMemberCount());
             clockInConfigVOList.add(clockInConfigVO);
         }
-
-
+        PageHelper.startPage(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(clockInConfigVOList);
         pageInfo.setList(clockInConfigVOList);
         return ServerResponse.createServerResponseBySucess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse haveClockInLogic(Integer clockId, UserVO userInfo, Integer pageNum, Integer pageSize, String orderBy) {
+        if (clockId == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.CLOCK_ID_EMPTY.getCode(),
+                    ResponseCode.CLOCK_ID_EMPTY.getMsg());
+        }
+        if (userInfo.getRole() != Const.ROLE_ADMIN){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+
+        ClockInConfig clockInConfig = clockInConfigMapper.selectByPrimaryKey(clockId);
+        if (clockInConfig == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.CLOCK_NOT_EXISTS.getCode(),
+                    ResponseCode.CLOCK_NOT_EXISTS.getMsg());
+        }
+        if (clockInConfig.getTeamId() != userInfo.getTeamId()){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+
+        List<User> userList = userMapper.findClockIn(clockId);
+        List<UserVO> userVOList = new ArrayList<>();
+        for (User user:userList) {
+            UserVO userVO = UserService.convert(user);
+            userVOList.add(userVO);
+        }
+
+        return ServerResponse.createServerResponseBySucess(userVOList);
+    }
+
+    @Override
+    public ServerResponse haveNotClockInLogic(Integer clockId, UserVO userInfo, Integer pageNum, Integer pageSize, String orderBy) {
+        if (clockId == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.CLOCK_ID_EMPTY.getCode(),
+                    ResponseCode.CLOCK_ID_EMPTY.getMsg());
+        }
+        if (userInfo.getRole() != Const.ROLE_ADMIN){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+
+        ClockInConfig clockInConfig = clockInConfigMapper.selectByPrimaryKey(clockId);
+        if (clockInConfig == null){
+            return ServerResponse.createServerResponseByFail(ResponseCode.CLOCK_NOT_EXISTS.getCode(),
+                    ResponseCode.CLOCK_NOT_EXISTS.getMsg());
+        }
+        if (clockInConfig.getTeamId() != userInfo.getTeamId()){
+            return ServerResponse.createServerResponseByFail(ResponseCode.PRIVILEGE_ERROR.getCode(),
+                    ResponseCode.PRIVILEGE_ERROR.getMsg());
+        }
+
+        List<User> userList = userMapper.findNotClockIn(clockId, userInfo.getTeamId());
+        List<UserVO> userVOList = new ArrayList<>();
+        for (User user:userList) {
+            UserVO userVO = UserService.convert(user);
+            userVOList.add(userVO);
+        }
+
+        return ServerResponse.createServerResponseBySucess(userVOList);
     }
 
     public ClockInConfigVO ConfigToConfigVO (ClockInConfig clockInConfig){

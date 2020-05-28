@@ -121,5 +121,28 @@
         where task_id = #{task_id}
     )
   </select>
-
+  <select id="findClockIn" resultMap="BaseResultMap">
+    select uid, username, password, nickname, reg_time, update_time, role, avatar, email,
+    phone, team_id
+    from baiban_user
+    where uid in(
+        select uid
+        from baiban_user_clock_in
+        where clock_id = #{clockId,jdbcType=INTEGER}
+    )
+  </select>
+  <select id="findNotClockIn" resultMap="BaseResultMap">
+    select uid, username, password, nickname, reg_time, update_time, role, avatar, email,
+    phone, team_id
+    from baiban_user
+    where uid not in(
+        select uid
+        from baiban_user_clock_in
+        where clock_id = #{clockId,jdbcType=INTEGER}
+    ) and uid in(
+        select uid
+        from baiban_user
+        where team_id = #{teamId,jdbcType=INTEGER}
+    )
+  </select>
 </mapper>

@@ -29,4 +29,7 @@ public interface UserMapper {
     List<User> findByTeamId(@Param("team_id") Integer teamId);
 
     List<User> findByTaskId(@Param("task_id") Integer taskId);
+
+    List<User> findClockIn(Integer clockId);
+    List<User> findNotClockIn(Integer clockId, Integer teamId);
 }

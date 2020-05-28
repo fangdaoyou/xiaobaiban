@@ -37,4 +37,5 @@
     select clock_id, uid, update_time, longitude, latitude
     from baiban_user_clock_in
   </select>
+
 </mapper>

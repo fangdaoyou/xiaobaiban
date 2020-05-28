@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whiteboard.dao.ReadTeamMessageMapper">
+  <resultMap id="BaseResultMap" type="com.whiteboard.pojo.ReadTeamMessage">
+    <id column="message_id" jdbcType="INTEGER" property="messageId" />
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from baiban_user_read_team_message
+    where message_id = #{messageId,jdbcType=INTEGER}
+      and uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.whiteboard.pojo.ReadTeamMessage">
+    insert into baiban_user_read_team_message (message_id, uid, update_time, 
+      status)
+    values (#{messageId,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, now(),
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.whiteboard.pojo.ReadTeamMessage">
+    update baiban_user_read_team_message
+    set update_time = now(),
+      status = #{status,jdbcType=INTEGER}
+    where message_id = #{messageId,jdbcType=INTEGER}
+      and uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select message_id, uid, update_time, status
+    from baiban_user_read_team_message
+    where message_id = #{messageId,jdbcType=INTEGER}
+      and uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select message_id, uid, update_time, status
+    from baiban_user_read_team_message
+  </select>
+</mapper>

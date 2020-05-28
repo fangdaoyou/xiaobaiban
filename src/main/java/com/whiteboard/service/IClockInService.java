@@ -11,4 +11,6 @@ public interface IClockInService {
     public ServerResponse updateLogic(ClockInConfigVO clockInConfigVO, UserVO userInfo);
     public ServerResponse clockInLogic(UserClockInVO userClockInVO, UserVO userInfo);
     public ServerResponse listTeamLogic(UserVO userInfo, Integer pageNum, Integer pageSize, String orderBy);
+    public ServerResponse haveClockInLogic(Integer clockId, UserVO userInfo, Integer pageNum, Integer pageSize, String orderBy);
+    public ServerResponse haveNotClockInLogic(Integer clockId, UserVO userInfo, Integer pageNum, Integer pageSize, String orderBy);
 }
